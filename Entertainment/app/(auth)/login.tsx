@@ -32,6 +32,7 @@ const LoginPage = () => {
     }
     // Add your login logic here
     Alert.alert('Success', `Welcome!`);
+    router.replace('/(root)/(tabs)/home');
   };
 
   return (
