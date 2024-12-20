@@ -6,7 +6,10 @@ import {
   Text,
   TouchableOpacity,
   Alert,
+  SafeAreaView,
 } from 'react-native';
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 const RegistrationPage = () => {
   const [email, setEmail] = useState('');
@@ -33,79 +36,139 @@ const RegistrationPage = () => {
     }
     // Add your registration logic here
     Alert.alert('Success', `Registration complete for ${email}!`);
+    router.replace('/(auth)/login');
+  };
+
+  const handleBackPress = () => {
+    router.replace('/(auth)/login');
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Register</Text>
+    <SafeAreaView style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={handleBackPress}
+        >
+          <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Register</Text>
+      </View>
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        keyboardType="email-address"
-        autoCapitalize="none"
-      />
+      <View style={styles.content}>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          placeholderTextColor="#757575"
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        value={password}
-        onChangeText={setPassword}
-        secureTextEntry
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          placeholderTextColor="#757575"
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Confirm Password"
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-        secureTextEntry
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Confirm Password"
+          value={confirmPassword}
+          onChangeText={setConfirmPassword}
+          secureTextEntry
+          placeholderTextColor="#757575"
+        />
 
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Register</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+          <Text style={styles.buttonText}>Register</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.mainText}>
+        Already have an account?{' '}
+        <Text
+          style={styles.loginText}
+          onPress={() => router.replace('/(auth)/login')}>
+          Login
+        </Text>
+      </Text>
+      </View>
+    </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FAFAFA',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#64B5F6',
+    height: 56,
+    paddingHorizontal: 16,
+  },
+  backButton: {
+    padding: 8,
+    marginRight: 16,
+  },
+  backButtonText: {
+    color: '#FFFFFF',
+    fontSize: 24,
+  },
+  headerTitle: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: '500',
+  },
+  content: {
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
-    backgroundColor: '#f5f5f5',
-  },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 24,
   },
   input: {
     width: '100%',
     height: 50,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#BDBDBD',
     borderRadius: 8,
     paddingHorizontal: 16,
     fontSize: 16,
+    color: '#212121',
     marginBottom: 16,
   },
   button: {
     width: '100%',
     height: 50,
-    backgroundColor: '#083e',
+    backgroundColor: '#64B5F6',
     justifyContent: 'center',
     alignItems: 'center',
     borderRadius: 8,
   },
   buttonText: {
-    color: '#fff',
+    color: '#FFFFFF',
     fontSize: 16,
+    fontWeight: 'bold',
+  },
+  loginText: {
+    fontSize: 16,
+    marginTop: 16,
+    textAlign: 'center',
+    color: '#64B5F6',
+    fontWeight: 'bold',
+  },
+  mainText: {
+    fontSize: 16,
+    marginTop: 16,
+    textAlign: 'center',
+    color: '#BDBDBD',
     fontWeight: 'bold',
   },
 });
