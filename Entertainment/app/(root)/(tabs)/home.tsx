@@ -10,6 +10,8 @@ import {
   ActivityIndicator,
   Linking 
 } from 'react-native';
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 
 type SongItem = {
   id: string;
@@ -169,8 +171,14 @@ const HomePage = () => {
     </View>
   );
 
+    const handleBackPress = () => {
+      router.replace('/(auth)/login');
+    };
+
   return (
+
     <View style={styles.container}>
+      
       <TextInput
         style={styles.searchBar}
         placeholder="Search songs..."
@@ -337,6 +345,22 @@ const styles = StyleSheet.create({
   fabIcon: {
     fontSize: 24,
     color: '#FFFFFF',
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#64B5F6',
+    height: 56,
+    paddingHorizontal: 16,
+  },
+  backButton: {
+    padding: 8,
+    marginRight: 16,
+  },
+  headerTitle: {
+    color: '#FFFFFF',
+    fontSize: 20,
+    fontWeight: '500',
   },
 });
 

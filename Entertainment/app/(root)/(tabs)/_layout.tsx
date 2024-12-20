@@ -14,7 +14,8 @@ export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: '#FF6347', // Active icon and text color
+        tabBarInactiveTintColor: '#808080', // Inactive icon and text color
         headerShown: false,
         tabBarButton: HapticTab,
         tabBarBackground: TabBarBackground,
@@ -26,20 +27,28 @@ export default function TabLayout() {
           default: {},
         }),
       }}>
+      {/* Songs Tab */}
       <Tabs.Screen
         name="home"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Songs',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="music.note" color={color} /> // Custom icon color based on state
+          ),
         }}
       />
+
+      {/* Artists Tab */}
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Artists',
+          tabBarIcon: ({ color }) => (
+            <IconSymbol size={28} name="person.2.fill" color={color} /> // Custom icon color based on state
+          ),
         }}
       />
     </Tabs>
   );
+  
 }
