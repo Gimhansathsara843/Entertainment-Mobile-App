@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,15 +6,38 @@ import {
   Text,
   TouchableOpacity,
   Alert,
-  SafeAreaView,
+  Animated,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 
 const RegistrationPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const translateY = new Animated.Value(0);
+
+  useEffect(() => {
+    const createAnimation = () => {
+      Animated.sequence([
+        Animated.timing(translateY, {
+          toValue: 7,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(translateY, {
+          toValue: 0,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+      ]).start(() => createAnimation());
+    };
+
+    createAnimation();
+  }, []);
 
   const handleRegister = () => {
     if (!email) {
@@ -34,9 +57,8 @@ const RegistrationPage = () => {
       Alert.alert('Error', 'Please enter a valid email address.');
       return;
     }
-    // Add your registration logic here
     Alert.alert('Success', `Registration complete for ${email}!`);
-    router.replace('/(auth)/login');
+    router.replace('/(root)/(tabs)/home');
   };
 
   const handleBackPress = () => {
@@ -44,93 +66,129 @@ const RegistrationPage = () => {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
+      {/* Animated Background */}
+      <Animated.Image
+        source={require('../../assets/images/back_ground_1.jpg')}
+        style={[
+          styles.backgroundImage,
+          {
+            transform: [{ translateY }],
+          },
+        ]}
+      />
+
+      <View style={styles.overlay} />
+
+      {/* Header Section */}
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={handleBackPress}
-        >
+        <TouchableOpacity style={styles.backButton} onPress={handleBackPress}>
           <Ionicons name="arrow-back" size={24} color="#FFFFFF" />
         </TouchableOpacity>
         <Text style={styles.headerTitle}>Register</Text>
       </View>
 
-      <View style={styles.content}>
-        <TextInput
-          style={styles.input}
-          placeholder="Email"
-          value={email}
-          onChangeText={setEmail}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          placeholderTextColor="#757575"
-        />
+      {/* Keyboard-Aware Content */}
+      <KeyboardAvoidingView
+        style={styles.contentContainer}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+        keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+      >
+        <BlurView intensity={80} tint="light" style={styles.blurBox}>
+          <TextInput
+            style={styles.input}
+            placeholder="Email"
+            value={email}
+            onChangeText={setEmail}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            placeholderTextColor="#757575"
+          />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          secureTextEntry
-          placeholderTextColor="#757575"
-        />
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+            placeholderTextColor="#757575"
+          />
 
-        <TextInput
-          style={styles.input}
-          placeholder="Confirm Password"
-          value={confirmPassword}
-          onChangeText={setConfirmPassword}
-          secureTextEntry
-          placeholderTextColor="#757575"
-        />
+          <TextInput
+            style={styles.input}
+            placeholder="Confirm Password"
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+            secureTextEntry
+            placeholderTextColor="#757575"
+          />
 
-        <TouchableOpacity style={styles.button} onPress={handleRegister}>
-          <Text style={styles.buttonText}>Register</Text>
-        </TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={handleRegister}>
+            <Text style={styles.buttonText}>Register</Text>
+          </TouchableOpacity>
 
-        <Text style={styles.mainText}>
-        Already have an account?{' '}
-        <Text
-          style={styles.loginText}
-          onPress={() => router.replace('/(auth)/login')}>
-          Login
-        </Text>
-      </Text>
-      </View>
-    </SafeAreaView>
+          <Text style={styles.mainText}>
+            Already have an account?{' '}
+            <Text
+              style={styles.loginText}
+              onPress={() => router.replace('/(auth)/login')}
+            >
+              Login
+            </Text>
+          </Text>
+        </BlurView>
+      </KeyboardAvoidingView>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#FAFAFA',
+  },
+  backgroundImage: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+  //  backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   header: {
+    position: 'absolute',
+    top: 40, // Distance from the top
+    left: 16, // Distance from the left
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#64B5F6',
-    height: 56,
-    paddingHorizontal: 16,
   },
   backButton: {
     padding: 8,
-    marginRight: 16,
-  },
-  backButtonText: {
-    color: '#FFFFFF',
-    fontSize: 24,
+    marginRight: 8,
   },
   headerTitle: {
     color: '#FFFFFF',
     fontSize: 20,
     fontWeight: '500',
   },
-  content: {
+  contentContainer: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     padding: 16,
+    marginTop: 120, // Push content down below the header
+  },
+  blurBox: {
+    width: '90%',
+    borderRadius: 16,
+    padding: 24,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+    overflow: 'hidden',
+   // backgroundColor: 'rgba(255, 255, 255, 0.2)',
   },
   input: {
     width: '100%',
@@ -145,12 +203,15 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   button: {
-    width: '100%',
-    height: 50,
     backgroundColor: '#64B5F6',
-    justifyContent: 'center',
+    paddingVertical: 15,
+    borderRadius: 30,
     alignItems: 'center',
-    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
   buttonText: {
     color: '#FFFFFF',
@@ -159,17 +220,14 @@ const styles = StyleSheet.create({
   },
   loginText: {
     fontSize: 16,
-    marginTop: 16,
-    textAlign: 'center',
-    color: '#64B5F6',
+    color: '#FFFFFF',
     fontWeight: 'bold',
   },
   mainText: {
     fontSize: 16,
     marginTop: 16,
     textAlign: 'center',
-    color: '#BDBDBD',
-    fontWeight: 'bold',
+    color: '#00000',
   },
 });
 

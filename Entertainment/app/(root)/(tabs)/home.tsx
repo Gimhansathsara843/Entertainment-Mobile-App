@@ -8,6 +8,7 @@ import {
   Image, 
   TouchableOpacity, 
   ActivityIndicator,
+  Animated,
   Linking 
 } from 'react-native';
 import { router } from 'expo-router';
@@ -30,6 +31,7 @@ const HomePage = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCount, setSelectedCount] = useState(0);
   const [error, setError] = useState<string | null>(null);
+  const translateY = new Animated.Value(0);
 
   // Fetch trending tracks on initial load
   useEffect(() => {
@@ -172,12 +174,27 @@ const HomePage = () => {
   );
 
     const handleBackPress = () => {
-      router.replace('/(auth)/login');
+      router.replace('/(auth)/welcome');
     };
+
 
   return (
 
     <View style={styles.container}>
+
+
+      <View style={styles.header}>
+            <Animated.Image
+              source={require('../../../assets/images/back_ground_1.jpg')}
+              style={[
+                styles.backgroundImage,
+                {
+                  transform: [{ translateY }],
+                },
+              ]}
+            />
+
+        <Text style={styles.title}>Songs List</Text>
       
       <TextInput
         style={styles.searchBar}
@@ -185,6 +202,7 @@ const HomePage = () => {
         value={searchQuery}
         onChangeText={setSearchQuery}
       />
+      </View>
 
       {error && <Text style={styles.errorText}>{error}</Text>}
 
@@ -302,7 +320,6 @@ const styles = StyleSheet.create({
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 8,
-    marginBottom: 16,
     paddingHorizontal: 8,
     backgroundColor: '#FFFFFF',
   },
@@ -347,12 +364,19 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#64B5F6',
-    height: 56,
-    paddingHorizontal: 16,
+    padding: 16,
+    //backgroundColor: '#FFFFFF',
+    borderBottomWidth: 1,
+    borderBottomColor: '#E0E0E0',
+
   },
+  // header: {
+
+  //   alignItems: 'center',
+  //   backgroundColor: '#64B5F6',
+  //   height: 56,
+  //   paddingHorizontal: 16,
+  // },
   backButton: {
     padding: 8,
     marginRight: 16,
@@ -361,6 +385,18 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 20,
     fontWeight: '500',
+  },
+  backgroundImage: {
+    position: 'absolute',
+    width: '110%',
+    height: '110%', // Extra height for animation
+    top: -10, // Offset to hide edge during animation
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 16,
+    color: '#FFFFFF',
   },
 });
 

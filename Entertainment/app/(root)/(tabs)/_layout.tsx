@@ -3,10 +3,11 @@ import React from 'react';
 import { Platform } from 'react-native';
 
 import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
 import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
 import { useColorScheme } from '@/hooks/useColorScheme';
+
+import FontAwesome from '@expo/vector-icons/FontAwesome';
+import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -24,16 +25,16 @@ export default function TabLayout() {
             // Use a transparent background on iOS to show the blur effect
             position: 'absolute',
           },
-          default: {},
         }),
-      }}>
+      }}
+    >
       {/* Songs Tab */}
       <Tabs.Screen
         name="home"
         options={{
           title: 'Songs',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="music.note" color={color} /> // Custom icon color based on state
+            <FontAwesome name="music" size={24} color={color} /> // Use the dynamic `color` prop
           ),
         }}
       />
@@ -44,11 +45,10 @@ export default function TabLayout() {
         options={{
           title: 'Artists',
           tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="person.2.fill" color={color} /> // Custom icon color based on state
+            <MaterialCommunityIcons name="account-music" size={30} color={color} /> // Use the dynamic `color` prop
           ),
         }}
       />
     </Tabs>
   );
-  
 }

@@ -7,6 +7,7 @@ import {
   Image, 
   TouchableOpacity, 
   TextInput,
+  Animated,
   ActivityIndicator 
 } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -25,6 +26,7 @@ const ExplorePage = () => {
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [error, setError] = useState<string | null>(null);
+    const translateY = new Animated.Value(0);
 
   // Fetch top artists on initial load
   useEffect(() => {
@@ -149,7 +151,17 @@ const ExplorePage = () => {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <Text style={styles.title}>Explore Artists</Text>
+
+                  <Animated.Image
+                      source={require('../../../assets/images/back_ground_1.jpg')}
+                      style={[
+                        styles.backgroundImage,
+                        {
+                          transform: [{ translateY }],
+                        },
+                      ]}
+                    />
+        <Text style={styles.title}>Artists List</Text>
         <TextInput
           style={styles.searchBar}
           placeholder="Search artists..."
@@ -183,19 +195,21 @@ const ExplorePage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    padding: 16,
     backgroundColor: '#FAFAFA',
   },
   header: {
     padding: 16,
-    backgroundColor: '#FFFFFF',
+    //backgroundColor: '#FFFFFF',
     borderBottomWidth: 1,
     borderBottomColor: '#E0E0E0',
+
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
-    color: '#212121',
+    color: '#FFFFFF',
   },
   searchBar: {
     height: 40,
@@ -255,6 +269,12 @@ const styles = StyleSheet.create({
     color: '#757575',
     marginTop: 32,
     paddingHorizontal: 16,
+  },
+  backgroundImage: {
+    position: 'absolute',
+    width: '110%',
+    height: '110%', // Extra height for animation
+    top: -10, // Offset to hide edge during animation
   },
 });
 
